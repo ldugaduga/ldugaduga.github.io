@@ -13,6 +13,10 @@ h1 {
   text-transform: uppercase;
 }
 
+h3 {
+  color:#fff
+}
+
 #coming .well {
   background: rgba(0,0,0,0.5);
   border:none
