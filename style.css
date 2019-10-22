@@ -25,3 +25,17 @@ h2 {
 #work {
   background: #fafafa;
 }
+
+#testimonies {
+  background: #fafafa;
+}
+
+
+#footer {
+  background: #000;
+}
+
+#footer p {
+  color:#fff;
+  font-size: 14px;
+}
