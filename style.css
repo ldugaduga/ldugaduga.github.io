@@ -1,0 +1,27 @@
+h1,
+h2 {
+  font-family: "Lora", serif;
+}
+
+#header {
+  background: url(img/1.jpg);
+  background-size: cover;
+  background-position: center;
+}
+.myintro {
+  font-size: 20px;
+}
+
+#header h1,
+#header p,
+#header a {
+  color: #fff;
+}
+
+#services {
+  background: #fff;
+}
+
+#work {
+  background: #fafafa;
+}
