@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact form test — Louie Dugaduga</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,500;1,14..32,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+
+<style>
+  body{ display:flex; align-items:center; justify-content:center; min-height:100vh; }
+  .form-card{
+    width:100%;
+    max-width:520px;
+    margin:48px 24px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:var(--radius-l);
+    padding:40px;
+  }
+  .form-card h1{ font-size:26px; margin-bottom:8px; }
+  .form-card p.lead{ color:var(--text-secondary); font-size:15px; margin:0 0 28px; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:13.5px; font-weight:600; color:var(--text-secondary); margin-bottom:6px; }
+  .field input,
+  .field textarea{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:var(--radius-s);
+    padding:12px 14px;
+    color:var(--text-primary);
+    font-family:inherit;
+    font-size:15px;
+  }
+  .field input:focus,
+  .field textarea:focus{ outline:none; border-color:var(--accent); }
+  .field textarea{ min-height:120px; resize:vertical; }
+  .honeypot{ position:absolute; left:-9999px; }
+  .form-status{
+    margin-top:18px;
+    font-size:14px;
+    display:none;
+  }
+  .form-status.success{ display:block; color:#4ade80; }
+  .form-status.error{ display:block; color:#f87171; }
+  .form-card button[type="submit"]{ width:100%; border:none; }
+</style>
+</head>
+<body>
+
+<div class="form-card">
+  <h1>Get in touch</h1>
+  <p class="lead">Tell me a bit about your project and I'll reply by email.</p>
+
+  <form id="contactForm" action="https://formspree.io/f/xrgrqdol" method="POST">
+    <div class="field">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required maxlength="100">
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="field">
+      <label for="message">Message</label>
+      <textarea id="message" name="message" required maxlength="5000"></textarea>
+    </div>
+
+    <!-- honeypot: bots fill this in, humans never see it -->
+    <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off">
+
+    <button type="submit" class="btn btn-primary">Send message</button>
+    <p class="form-status" id="formStatus"></p>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('contactForm');
+  const status = document.getElementById('formStatus');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    status.className = 'form-status';
+    status.textContent = '';
+
+    try {
+      const res = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        status.textContent = "Thanks, that's sent. I'll reply by email shortly.";
+        status.className = 'form-status success';
+        form.reset();
+      } else {
+        const data = await res.json().catch(() => null);
+        status.textContent = data?.errors?.map(err => err.message).join(', ') || 'Something went wrong, please try again.';
+        status.className = 'form-status error';
+      }
+    } catch (err) {
+      status.textContent = 'Network error, please try again.';
+      status.className = 'form-status error';
+    }
+  });
+</script>
+
+</body>
+</html>
