@@ -6,7 +6,7 @@ Personal portfolio for **Louie Dugaduga** — WordPress and frontend developer, 
 
 Single-page static site, no build step:
 
-- Plain HTML + CSS + vanilla JS (`index.html`) — everything lives in one file
+- Plain HTML + CSS + vanilla JS (`index.html` for markup and scripts, `assets/style.css` for styles)
 - [Inter](https://fonts.google.com/specimen/Inter) via Google Fonts
 - [Phosphor Icons](https://phosphoricons.com/) via CDN
 - Google Analytics (gtag.js)
@@ -14,7 +14,8 @@ Single-page static site, no build step:
 ## Structure
 
 ```
-index.html          # the whole site: markup, styles, and scripts
+index.html           # markup and scripts
+assets/style.css     # site styles
 assets/work/*.jpg    # real screenshots of live client projects, used in "Selected work"
 ```
 
@@ -35,7 +36,3 @@ Served directly by GitHub Pages from the `master` branch — push to `master` an
 ## Content sections
 
 Hero, availability strip, services, process, selected work (linked to live client sites), experience timeline, testimonials (pulled from verified Upwork reviews), and a contact CTA.
-
-## Legacy files
-
-`style.css` and `img/` are leftovers from the previous version of the site and are no longer referenced by `index.html`. Safe to remove in a future cleanup pass.
