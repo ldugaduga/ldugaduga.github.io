@@ -6,7 +6,7 @@ Personal portfolio for **Louie Dugaduga** — WordPress and frontend developer, 
 
 Single-page static site, no build step:
 
-- Plain HTML + CSS + vanilla JS (`index.html`) — everything lives in one file
+- Plain HTML + CSS + vanilla JS
 - [Inter](https://fonts.google.com/specimen/Inter) via Google Fonts
 - [Phosphor Icons](https://phosphoricons.com/) via CDN
 - Google Analytics (gtag.js)
@@ -14,8 +14,10 @@ Single-page static site, no build step:
 ## Structure
 
 ```
-index.html          # the whole site: markup, styles, and scripts
-assets/work/*.jpg    # real screenshots of live client projects, used in "Selected work"
+index.html            # markup only
+assets/css/style.css  # all page styles
+assets/js/main.js     # mobile nav, scroll reveals, hero counter animation
+assets/work/*.jpg     # real screenshots of live client projects, used in "Selected work"
 ```
 
 ## Local preview
@@ -38,4 +40,4 @@ Hero, availability strip, services, process, selected work (linked to live clien
 
 ## Legacy files
 
-`style.css` and `img/` are leftovers from the previous version of the site and are no longer referenced by `index.html`. Safe to remove in a future cleanup pass.
+The root-level `style.css` and `img/` are leftovers from the previous version of the site (not the same as `assets/css/style.css`) and are no longer referenced by `index.html`. Safe to remove in a future cleanup pass.
