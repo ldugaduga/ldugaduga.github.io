@@ -25,8 +25,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,500;1,14..32,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css">
+<link rel="stylesheet" href="assets/style.css">
 
-<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
@@ -44,7 +44,7 @@
       <a href="#contact">Contact</a>
     </nav>
     <div class="nav-cta">
-      <a class="btn btn-primary" href="https://www.upwork.com/freelancers/~01a9b9d3c52f9eeb7e" target="_blank" rel="noopener">Start a project</a>
+      <button type="button" class="btn btn-primary" data-open-modal>Start a project</button>
       <button class="nav-toggle" id="navToggle" aria-label="Open menu"><i class="ph ph-list"></i></button>
     </div>
   </div>
@@ -54,7 +54,7 @@
     <a href="#process">Process</a>
     <a href="#experience">Experience</a>
     <a href="#contact">Contact</a>
-    <a class="btn btn-primary" href="https://www.upwork.com/freelancers/~01a9b9d3c52f9eeb7e" target="_blank" rel="noopener">Start a project</a>
+    <button type="button" class="btn btn-primary" data-open-modal>Start a project</button>
   </div>
 </header>
 
@@ -67,9 +67,9 @@
         <h1>WordPress sites that don't break <em>after</em> handoff.</h1>
         <p class="sub">18 years of WordPress and HTML builds, fast to ship and built to last, for agencies done with rebuilds.</p>
         <div class="hero-ctas">
-          <a class="btn btn-primary" href="https://www.upwork.com/freelancers/~01a9b9d3c52f9eeb7e" target="_blank" rel="noopener">
+          <button type="button" class="btn btn-primary" data-open-modal>
             <i class="ph ph-briefcase"></i> Start a project
-          </a>
+          </button>
           <a class="btn btn-secondary" href="#work">View my work</a>
         </div>
       </div>
@@ -483,11 +483,11 @@
     <div class="wrap">
       <div class="cta-banner reveal">
         <h2>Have a WordPress site that needs fixing, migrating, or rebuilding?</h2>
-        <p>Send over the details on Upwork or connect on LinkedIn, I usually reply within a day.</p>
+        <p>Send over the details or connect on LinkedIn, I usually reply within a day.</p>
         <div class="cta-actions">
-          <a class="btn btn-primary" href="https://www.upwork.com/freelancers/~01a9b9d3c52f9eeb7e" target="_blank" rel="noopener">
+          <button type="button" class="btn btn-primary" data-open-modal>
             <i class="ph ph-briefcase"></i> Start a project
-          </a>
+          </button>
           <a class="btn btn-secondary" href="https://www.linkedin.com/in/louie-dugaduga-514a8912/" target="_blank" rel="noopener">
             <i class="ph ph-linkedin-logo"></i> Connect on LinkedIn
           </a>
@@ -513,7 +513,193 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js" defer></script>
+<div class="modal-overlay" id="contactModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Close">
+      <i class="ph ph-x"></i>
+    </button>
+    <h2 id="modalTitle">Start a project</h2>
+    <p class="lead">Tell me a bit about your project and I'll reply by email.</p>
+    <form id="contactForm" action="https://formspree.io/f/xrgrqdol" method="POST">
+      <div class="field">
+        <label for="modalName">Name</label>
+        <input type="text" id="modalName" name="name" required maxlength="100">
+      </div>
+      <div class="field">
+        <label for="modalEmail">Email</label>
+        <input type="email" id="modalEmail" name="email" required>
+      </div>
+      <div class="field">
+        <label for="modalMessage">Message</label>
+        <textarea id="modalMessage" name="message" required maxlength="5000"></textarea>
+      </div>
+      <input type="text" name="_gotcha" class="honeypot" tabindex="-1" autocomplete="off">
+      <button type="submit" class="btn btn-primary">Send message</button>
+      <p class="form-status" id="formStatus"></p>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var menu = document.getElementById('mobileMenu');
+    toggle.addEventListener('click', function(){
+      menu.classList.toggle('open');
+      var open = menu.classList.contains('open');
+      toggle.innerHTML = open ? '<i class="ph ph-x"></i>' : '<i class="ph ph-list"></i>';
+    });
+    menu.querySelectorAll('a, button').forEach(function(el){
+      el.addEventListener('click', function(){
+        menu.classList.remove('open');
+        toggle.innerHTML = '<i class="ph ph-list"></i>';
+      });
+    });
+
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(!prefersReduced && 'IntersectionObserver' in window){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting){
+            entry.target.classList.add('in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+      document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+    } else {
+      document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+    }
+
+    var counters = document.querySelectorAll('.num[data-count]');
+    function animateCount(el){
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      if(prefersReduced || isNaN(target)){ el.textContent = target; return; }
+      var duration = 1400;
+      var start = null;
+      function ease(t){ return 1 - Math.pow(1 - t, 3); }
+      function step(ts){
+        if(start === null) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        el.textContent = Math.round(ease(progress) * target);
+        if(progress < 1){ requestAnimationFrame(step); }
+      }
+      requestAnimationFrame(step);
+    }
+    if(counters.length){
+      if(!prefersReduced && 'IntersectionObserver' in window){
+        var countObserver = new IntersectionObserver(function(entries){
+          entries.forEach(function(entry){
+            if(entry.isIntersecting){
+              animateCount(entry.target);
+              countObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.5 });
+        counters.forEach(function(el){ countObserver.observe(el); });
+      } else {
+        counters.forEach(function(el){ animateCount(el); });
+      }
+    }
+
+    var track = document.querySelector('[data-slide-track]');
+    if(track){
+      var prevBtn = document.querySelector('[data-slide-prev]');
+      var nextBtn = document.querySelector('[data-slide-next]');
+      var slides = track.querySelectorAll('.testi-slide');
+      function slideStep(){
+        var first = slides[0];
+        return first ? first.getBoundingClientRect().width + 20 : 300;
+      }
+      function updateNavState(){
+        var max = track.scrollWidth - track.clientWidth - 4;
+        prevBtn.disabled = track.scrollLeft <= 4;
+        nextBtn.disabled = track.scrollLeft >= max;
+      }
+      prevBtn.addEventListener('click', function(){
+        track.scrollBy({ left: -slideStep(), behavior: prefersReduced ? 'auto' : 'smooth' });
+      });
+      nextBtn.addEventListener('click', function(){
+        track.scrollBy({ left: slideStep(), behavior: prefersReduced ? 'auto' : 'smooth' });
+      });
+      track.addEventListener('scroll', function(){
+        window.requestAnimationFrame(updateNavState);
+      });
+      window.addEventListener('resize', updateNavState);
+      updateNavState();
+    }
+
+    var loadMoreBtn = document.getElementById('workLoadMore');
+    if(loadMoreBtn){
+      loadMoreBtn.addEventListener('click', function(){
+        document.querySelectorAll('.work-card-extra.is-hidden').forEach(function(card){
+          card.classList.remove('is-hidden');
+          card.classList.add('in');
+        });
+        loadMoreBtn.remove();
+      });
+    }
+  })();
+
+  (function(){
+    var modal = document.getElementById('contactModal');
+    var closeBtn = document.getElementById('modalClose');
+    var form = document.getElementById('contactForm');
+    var status = document.getElementById('formStatus');
+    var lastFocused = null;
+
+    function openModal(e){
+      if(e) e.preventDefault();
+      lastFocused = document.activeElement;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      var firstField = modal.querySelector('input, textarea');
+      if(firstField) firstField.focus();
+    }
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      if(lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+
+    document.querySelectorAll('[data-open-modal]').forEach(function(t){
+      t.addEventListener('click', openModal);
+    });
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e){ if(e.target === modal) closeModal(); });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      status.className = 'form-status';
+      status.textContent = '';
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function(res){
+        if(res.ok){
+          status.textContent = "Thanks, that's sent. I'll reply by email shortly.";
+          status.className = 'form-status success';
+          form.reset();
+        } else {
+          return res.json().catch(function(){ return null; }).then(function(data){
+            var msg = data && data.errors ? data.errors.map(function(er){ return er.message; }).join(', ') : null;
+            status.textContent = msg || 'Something went wrong, please try again.';
+            status.className = 'form-status error';
+          });
+        }
+      }).catch(function(){
+        status.textContent = 'Network error, please try again.';
+        status.className = 'form-status error';
+      });
+    });
+  })();
+</script>
 
 </body>
 </html>
