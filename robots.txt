@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /form.html
+
+Sitemap: https://ldugaduga.github.io/sitemap.xml
